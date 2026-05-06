@@ -5,7 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FolderKanban, Plus, ListChecks, Calendar, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { PROJECT_STATUS, TASK_PRIORITY, TASK_STATUS, brl, fmtDate, fmtDateTime, isOverdue } from "@/lib/format";
+import { PROJECT_STATUS, TASK_PRIORITY, TASK_STATUS, brl, fmtDate, isOverdue } from "@/lib/format";
+const fmtDateTime = (d: string | null | undefined) =>
+  d ? new Date(d).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—";
 import { useState } from "react";
 import { TaskDialog, type Task } from "@/components/TaskDialog";
 
