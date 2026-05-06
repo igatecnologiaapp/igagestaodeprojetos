@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, FolderKanban, ListChecks, Users, BarChart3, LogOut, Sparkles } from "lucide-react";
+import { LayoutDashboard, Building2, FolderKanban, ListChecks, Users, BarChart3, LogOut, Sparkles, CalendarClock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
