@@ -18,6 +18,7 @@ import { Route as AppRelatoriosRouteImport } from './routes/_app.relatorios'
 import { Route as AppProjetosRouteImport } from './routes/_app.projetos'
 import { Route as AppEmpresasRouteImport } from './routes/_app.empresas'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppAgendaRouteImport } from './routes/_app.agenda'
 import { Route as AppProjetosProjectIdRouteImport } from './routes/_app.projetos.$projectId'
 import { Route as AppEmpresasCompanyIdRouteImport } from './routes/_app.empresas.$companyId'
 
@@ -65,6 +66,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAgendaRoute = AppAgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProjetosProjectIdRoute = AppProjetosProjectIdRouteImport.update({
   id: '/$projectId',
   path: '/$projectId',
@@ -79,6 +85,7 @@ const AppEmpresasCompanyIdRoute = AppEmpresasCompanyIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/agenda': typeof AppAgendaRoute
   '/dashboard': typeof AppDashboardRoute
   '/empresas': typeof AppEmpresasRouteWithChildren
   '/projetos': typeof AppProjetosRouteWithChildren
@@ -91,6 +98,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/agenda': typeof AppAgendaRoute
   '/dashboard': typeof AppDashboardRoute
   '/empresas': typeof AppEmpresasRouteWithChildren
   '/projetos': typeof AppProjetosRouteWithChildren
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/agenda': typeof AppAgendaRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/empresas': typeof AppEmpresasRouteWithChildren
   '/_app/projetos': typeof AppProjetosRouteWithChildren
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/agenda'
     | '/dashboard'
     | '/empresas'
     | '/projetos'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/agenda'
     | '/dashboard'
     | '/empresas'
     | '/projetos'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/agenda'
     | '/_app/dashboard'
     | '/_app/empresas'
     | '/_app/projetos'
@@ -225,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/agenda': {
+      id: '/_app/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AppAgendaRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/projetos/$projectId': {
       id: '/_app/projetos/$projectId'
       path: '/$projectId'
@@ -267,6 +286,7 @@ const AppProjetosRouteWithChildren = AppProjetosRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAgendaRoute: typeof AppAgendaRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEmpresasRoute: typeof AppEmpresasRouteWithChildren
   AppProjetosRoute: typeof AppProjetosRouteWithChildren
@@ -276,6 +296,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAgendaRoute: AppAgendaRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEmpresasRoute: AppEmpresasRouteWithChildren,
   AppProjetosRoute: AppProjetosRouteWithChildren,
