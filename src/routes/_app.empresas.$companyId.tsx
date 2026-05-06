@@ -3,9 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FolderKanban, Plus } from "lucide-react";
+import { ArrowLeft, FolderKanban, Plus, ListChecks, Calendar, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { PROJECT_STATUS, brl, fmtDate } from "@/lib/format";
+import { PROJECT_STATUS, TASK_PRIORITY, TASK_STATUS, brl, fmtDate, isOverdue } from "@/lib/format";
+const fmtDateTime = (d: string | null | undefined) =>
+  d ? new Date(d).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—";
+import { useState } from "react";
+import { TaskDialog, type Task } from "@/components/TaskDialog";
 
 export const Route = createFileRoute("/_app/empresas/$companyId")({
   component: CompanyDetail,
@@ -13,6 +17,8 @@ export const Route = createFileRoute("/_app/empresas/$companyId")({
 
 function CompanyDetail() {
   const { companyId } = Route.useParams();
+  const [taskOpen, setTaskOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const { data } = useQuery({
     queryKey: ["company", companyId],
@@ -22,6 +28,21 @@ function CompanyDetail() {
         supabase.from("projects").select("*").eq("company_id", companyId).order("created_at", { ascending: false }),
       ]);
       return { company: c.data, projects: p.data ?? [] };
+    },
+  });
+
+  const projectIds = (data?.projects ?? []).map((p) => p.id);
+
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["company-tasks", companyId, projectIds.join(",")],
+    enabled: projectIds.length > 0,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("tasks")
+        .select("*, projects(id, name), profiles:assignee_id(full_name)")
+        .in("project_id", projectIds)
+        .order("scheduled_at", { ascending: true, nullsFirst: false });
+      return data ?? [];
     },
   });
 
@@ -89,6 +110,76 @@ function CompanyDetail() {
             </Link>
           ))}
         </div>
+      )}
+
+      <div className="flex items-center justify-between pt-4">
+        <h2 className="font-display text-xl font-bold">Tarefas da empresa</h2>
+        <Button
+          size="sm"
+          onClick={() => { setEditingTask(null); setTaskOpen(true); }}
+          disabled={data.projects.length === 0}
+        >
+          <Plus className="h-4 w-4" /> Nova tarefa
+        </Button>
+      </div>
+
+      {data.projects.length === 0 ? (
+        <Card><CardContent className="p-6 text-center text-sm text-muted-foreground">
+          Cadastre um projeto antes de criar tarefas.
+        </CardContent></Card>
+      ) : tasks.length === 0 ? (
+        <Card><CardContent className="p-10 text-center text-muted-foreground">
+          <ListChecks className="h-8 w-8 mx-auto mb-2 opacity-40" />
+          Nenhuma tarefa para esta empresa.
+        </CardContent></Card>
+      ) : (
+        <div className="grid gap-2">
+          {tasks.map((t: any) => {
+            const overdue = isOverdue(t.due_date, t.status);
+            return (
+              <Card key={t.id} className="hover:shadow transition cursor-pointer" onClick={() => { setEditingTask(t); setTaskOpen(true); }}>
+                <CardContent className="p-4 flex items-center gap-4 flex-wrap">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium">{t.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t.projects?.name}
+                      {t.profiles?.full_name && ` · ${t.profiles.full_name}`}
+                      {t.contact_name && ` · ${t.contact_name}`}
+                      {t.contact_phone && ` · ${t.contact_phone}`}
+                    </div>
+                  </div>
+                  <Badge className={TASK_PRIORITY[t.priority as keyof typeof TASK_PRIORITY].color}>
+                    {TASK_PRIORITY[t.priority as keyof typeof TASK_PRIORITY].label}
+                  </Badge>
+                  <Badge className={TASK_STATUS[t.status as keyof typeof TASK_STATUS].color}>
+                    {TASK_STATUS[t.status as keyof typeof TASK_STATUS].label}
+                  </Badge>
+                  {t.scheduled_at && (
+                    <span className="text-xs flex items-center gap-1 text-muted-foreground">
+                      <Calendar className="h-3 w-3" /> {fmtDateTime(t.scheduled_at)}
+                    </span>
+                  )}
+                  {t.due_date && (
+                    <span className={`text-xs flex items-center gap-1 ${overdue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                      {overdue ? <AlertTriangle className="h-3 w-3" /> : <Calendar className="h-3 w-3" />}
+                      {fmtDate(t.due_date)}
+                    </span>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {taskOpen && (
+        <TaskDialog
+          open={taskOpen}
+          onOpenChange={setTaskOpen}
+          task={editingTask ?? undefined}
+          companyId={companyId}
+          projectId={editingTask?.project_id}
+        />
       )}
     </div>
   );
