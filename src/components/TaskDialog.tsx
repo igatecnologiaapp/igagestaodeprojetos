@@ -86,10 +86,10 @@ export function TaskDialog({
     mutationFn: async () => {
       if (!form.name.trim()) throw new Error("Nome obrigatório");
       if (!form.project_id) throw new Error("Selecione empresa e projeto");
-      const payload = { ...form, created_by: user?.id };
+      const payload = { ...form, project_id: form.project_id!, created_by: user?.id };
       const { error } = task?.id
         ? await supabase.from("tasks").update(payload).eq("id", task.id)
-        : await supabase.from("tasks").insert(payload);
+        : await supabase.from("tasks").insert(payload as any);
       if (error) throw error;
     },
     onSuccess: () => {
