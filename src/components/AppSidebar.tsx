@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, FolderKanban, ListChecks, Users, BarChart3, LogOut, Sparkles } from "lucide-react";
+import { LayoutDashboard, Building2, FolderKanban, ListChecks, Users, BarChart3, LogOut, Sparkles, CalendarClock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ const items = [
   { to: "/empresas", label: "Empresas", icon: Building2 },
   { to: "/projetos", label: "Projetos", icon: FolderKanban },
   { to: "/tarefas", label: "Tarefas", icon: ListChecks },
+  { to: "/agenda", label: "Agenda", icon: CalendarClock },
   { to: "/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/usuarios", label: "Usuários", icon: Users, adminOnly: true },
 ];
