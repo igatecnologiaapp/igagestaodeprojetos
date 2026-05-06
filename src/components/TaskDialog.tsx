@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TASK_PRIORITY, TASK_STATUS } from "@/lib/format";
+import { TASK_PRIORITY, TASK_STATUS, maskPhone } from "@/lib/format";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 
@@ -21,6 +21,9 @@ export type Task = {
   due_date?: string | null;
   priority?: keyof typeof TASK_PRIORITY;
   status?: keyof typeof TASK_STATUS;
+  scheduled_at?: string | null;
+  contact_name?: string | null;
+  contact_phone?: string | null;
 };
 
 export function TaskDialog({
@@ -107,6 +110,22 @@ export function TaskDialog({
           <div>
             <Label>Prazo</Label>
             <Input type="date" value={form.due_date ?? ""} onChange={(e) => set("due_date", e.target.value || null)} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label>Data agendada</Label>
+            <Input
+              type="datetime-local"
+              value={form.scheduled_at ? form.scheduled_at.slice(0, 16) : ""}
+              onChange={(e) => set("scheduled_at", e.target.value ? new Date(e.target.value).toISOString() : null)}
+            />
+          </div>
+          <div>
+            <Label>Contato da empresa</Label>
+            <Input value={form.contact_name ?? ""} onChange={(e) => set("contact_name", e.target.value)} />
+          </div>
+          <div>
+            <Label>Telefone do contato</Label>
+            <Input value={form.contact_phone ?? ""} onChange={(e) => set("contact_phone", maskPhone(e.target.value))} />
           </div>
           <div className="sm:col-span-2">
             <Label>Status</Label>

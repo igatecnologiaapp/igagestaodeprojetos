@@ -263,6 +263,33 @@ export type Database = {
         }
         Relationships: []
       }
+      project_shares: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          permission: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           company_id: string
@@ -348,9 +375,38 @@ export type Database = {
           },
         ]
       }
+      task_shares: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          permission: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission?: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tasks: {
         Row: {
           assignee_id: string | null
+          contact_name: string | null
+          contact_phone: string | null
           created_at: string
           created_by: string | null
           description: string | null
@@ -360,12 +416,15 @@ export type Database = {
           position: number
           priority: Database["public"]["Enums"]["task_priority"]
           project_id: string
+          scheduled_at: string | null
           start_date: string | null
           status: Database["public"]["Enums"]["task_status"]
           updated_at: string
         }
         Insert: {
           assignee_id?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -375,12 +434,15 @@ export type Database = {
           position?: number
           priority?: Database["public"]["Enums"]["task_priority"]
           project_id: string
+          scheduled_at?: string | null
           start_date?: string | null
           status?: Database["public"]["Enums"]["task_status"]
           updated_at?: string
         }
         Update: {
           assignee_id?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -390,6 +452,7 @@ export type Database = {
           position?: number
           priority?: Database["public"]["Enums"]["task_priority"]
           project_id?: string
+          scheduled_at?: string | null
           start_date?: string | null
           status?: Database["public"]["Enums"]["task_status"]
           updated_at?: string

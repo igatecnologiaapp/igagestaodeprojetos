@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
-import { ArrowLeft, Plus, Calendar, MessageSquare, Send } from "lucide-react";
+import { ArrowLeft, Plus, Calendar, MessageSquare, Send, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Kanban } from "@/components/Kanban";
 import { TaskDialog } from "@/components/TaskDialog";
+import { ShareDialog } from "@/components/ShareDialog";
 import { PROJECT_STATUS, brl, fmtDate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ function ProjectDetail() {
   const { user, role } = useAuth();
   const qc = useQueryClient();
   const [taskOpen, setTaskOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [comment, setComment] = useState("");
 
@@ -91,11 +93,16 @@ function ProjectDetail() {
             {project.companies?.name}
           </Link>
         </div>
-        {role !== "visualizador" && (
-          <Button onClick={() => { setEditingTask(null); setTaskOpen(true); }}>
-            <Plus className="h-4 w-4" /> Nova tarefa
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShareOpen(true)}>
+            <Share2 className="h-4 w-4" /> Compartilhar
           </Button>
-        )}
+          {role !== "visualizador" && (
+            <Button onClick={() => { setEditingTask(null); setTaskOpen(true); }}>
+              <Plus className="h-4 w-4" /> Nova tarefa
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -161,6 +168,7 @@ function ProjectDetail() {
       </Tabs>
 
       <TaskDialog open={taskOpen} onOpenChange={setTaskOpen} task={editingTask} projectId={projectId} />
+      <ShareDialog open={shareOpen} onOpenChange={setShareOpen} kind="project" entityId={projectId} />
     </div>
   );
 }
