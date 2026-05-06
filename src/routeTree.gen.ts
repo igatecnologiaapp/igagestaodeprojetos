@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppProjetosRouteImport } from './routes/_app.projetos'
 import { Route as AppEmpresasRouteImport } from './routes/_app.empresas'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppEmpresasCompanyIdRouteImport } from './routes/_app.empresas.$companyId'
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppProjetosRoute = AppProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppEmpresasRoute = AppEmpresasRouteImport.update({
   id: '/empresas',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
   '/empresas': typeof AppEmpresasRouteWithChildren
+  '/projetos': typeof AppProjetosRoute
   '/empresas/$companyId': typeof AppEmpresasCompanyIdRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
   '/empresas': typeof AppEmpresasRouteWithChildren
+  '/projetos': typeof AppProjetosRoute
   '/empresas/$companyId': typeof AppEmpresasCompanyIdRoute
 }
 export interface FileRoutesById {
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/empresas': typeof AppEmpresasRouteWithChildren
+  '/_app/projetos': typeof AppProjetosRoute
   '/_app/empresas/$companyId': typeof AppEmpresasCompanyIdRoute
 }
 export interface FileRouteTypes {
@@ -76,9 +85,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/empresas'
+    | '/projetos'
     | '/empresas/$companyId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/empresas' | '/empresas/$companyId'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/empresas'
+    | '/projetos'
+    | '/empresas/$companyId'
   id:
     | '__root__'
     | '/'
@@ -86,6 +102,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_app/dashboard'
     | '/_app/empresas'
+    | '/_app/projetos'
     | '/_app/empresas/$companyId'
   fileRoutesById: FileRoutesById
 }
@@ -117,6 +134,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/projetos': {
+      id: '/_app/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof AppProjetosRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/empresas': {
       id: '/_app/empresas'
@@ -157,11 +181,13 @@ const AppEmpresasRouteWithChildren = AppEmpresasRoute._addFileChildren(
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppEmpresasRoute: typeof AppEmpresasRouteWithChildren
+  AppProjetosRoute: typeof AppProjetosRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppEmpresasRoute: AppEmpresasRouteWithChildren,
+  AppProjetosRoute: AppProjetosRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
