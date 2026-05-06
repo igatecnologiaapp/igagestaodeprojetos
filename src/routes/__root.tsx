@@ -27,8 +27,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Flowdesk — Gestão de Projetos e Tarefas" },
-      { name: "description", content: "Plataforma completa de gestão de projetos, tarefas e clientes para consultorias." },
+      { title: "Gestão de Projetos e Tarefas" },
+      { name: "description", content: "Plataforma completa de gestão de projetos, tarefas" },
+      { property: "og:title", content: "Gestão de Projetos e Tarefas" },
+      { name: "twitter:title", content: "Gestão de Projetos e Tarefas" },
+      { property: "og:description", content: "Plataforma completa de gestão de projetos, tarefas" },
+      { name: "twitter:description", content: "Plataforma completa de gestão de projetos, tarefas" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/75d7474b-b66d-42d3-bf12-071ed154cfe8/id-preview-fbf92a27--58e48f67-ba49-43e2-a21e-2e6f22e3be86.lovable.app-1778075366969.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/75d7474b-b66d-42d3-bf12-071ed154cfe8/id-preview-fbf92a27--58e48f67-ba49-43e2-a21e-2e6f22e3be86.lovable.app-1778075366969.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
