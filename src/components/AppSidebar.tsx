@@ -8,6 +8,7 @@ const items = [
   { to: "/empresas", label: "Empresas", icon: Building2 },
   { to: "/projetos", label: "Projetos", icon: FolderKanban },
   { to: "/tarefas", label: "Tarefas", icon: ListChecks },
+  { to: "/agenda", label: "Agenda", icon: CalendarClock },
   { to: "/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/usuarios", label: "Usuários", icon: Users, adminOnly: true },
 ];
